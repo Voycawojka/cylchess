@@ -1,5 +1,5 @@
 import { List } from "immutable"
-import { CellPosition } from "./helpers";
+import { CellPosition } from "./types";
 import { Piece } from "./Piece";
 
 /**

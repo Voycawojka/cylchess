@@ -1,8 +1,9 @@
 import { List } from "immutable"
 import { Action } from "../../interface/Action"
 import { Board } from "../../interface/Board"
-import { CellPosition, Color, toggleColor } from "../../interface/helpers"
+import { CellPosition, Color } from "../../interface/types"
 import { Piece } from "../../interface/Piece"
+import { toggleColor } from "../helpers"
 
 /**
  * Implementation of classical chess.
@@ -29,6 +30,10 @@ export class RegularBoard implements Board {
 
     pieceAt(x: number, y: number): Piece | null {
         return this.pieces.find(piece => piece.position.x === x && piece.position.y === y) ?? null;
+    }
+
+    inBoard(x: number, y: number): boolean {
+        return x >= 0 && x < this.size.w && y >= 0 && y < this.size.h
     }
 
     applyAction({ piece, moveTo, captureAt, chainedAction }: Action): Board {

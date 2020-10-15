@@ -1,7 +1,7 @@
 import { List } from "immutable"
 import { Action } from "./Action";
 import { Board } from "./Board";
-import { CellPosition } from "./helpers"
+import { CellPosition, Color } from "./types"
 
 /**
  * Represents a state of a piece on the board and contains its movement/capturing logic
@@ -17,6 +17,11 @@ export interface Piece {
      * It should use a localization key (e.g. "PIECE.REGULAR.QUEEN"). Make sure to add at least english translation for it.
      */
     readonly name: string
+
+    /**
+     * Determines which player the piece belongs to
+     */
+    readonly color: Color
 
     /**
      * Current position on the board.

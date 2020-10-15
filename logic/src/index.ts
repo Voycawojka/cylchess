@@ -1,18 +1,17 @@
 import { Board } from "./interface/Board"
-import { Color } from "./interface/helpers"
+import { Color } from "./interface/types"
 import * as boards from "./implementations"
 
 export const variants = []
 
 /**
- * Makes the variant available to users to play.
- * Remember to add translations for the name and descriptions
+ * Makes the variant available for users to play.
  */
 function registerVariant(name: string, description: string, createBoard: (startingColor: Color) => Board) {
     variants.push({ name, description, createBoard })
 }
 
-// Keep the variants in alphabetical order
+// Keep the variants in alphabetical order and rememeber to update translations (at least the english one).
 
 registerVariant("VARIANT.REGULAR.NAME", "VARIANT.REGULAR.DESC", color => new boards.RegularBoard(color))
 registerVariant("VARIANT.ATOMIC.NAME", "VARIANT.ATOMIC.DESC", color => new boards.AtomicBoard(color))

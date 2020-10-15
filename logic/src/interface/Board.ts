@@ -1,6 +1,6 @@
 import { List } from "immutable";
 import { Action } from "./Action";
-import { CellPosition, Color } from "./helpers";
+import { CellPosition, Color } from "./types";
 import { Piece } from "./Piece";
 
 /**
@@ -33,6 +33,11 @@ export interface Board {
      * Null means there is no piece at this position either because the cell is empty or because the position is outside of the board.
      */
     pieceAt(x: number, y: number): Piece | null
+
+    /**
+     * Checks if the given position is inside the board
+     */
+    inBoard(x: number, y: number): boolean
 
     /**
      * Returns a new instance of the board reflecting the state of the game after applying the action.

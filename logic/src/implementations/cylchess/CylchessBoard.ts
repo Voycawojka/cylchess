@@ -19,6 +19,11 @@ export class CylchessBoard extends RegularBoard {
         return super.pieceAt(at.x, at.y)
     }
 
+    // This board has practically infinite Y so only X can be outside
+    inBoard(x: number, y: number): boolean {
+        return x >= 0 && x < this.size.w
+    }
+
     // This variant has custom starting positions
     protected createInitialPieces(): List<Piece> {
         return List([
