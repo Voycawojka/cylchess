@@ -3,7 +3,7 @@ import { Action } from "../../interface/Action"
 import { Board } from "../../interface/Board"
 import { CellPosition, Color } from "../../interface/types"
 import { Piece } from "../../interface/Piece"
-import { toggleColor } from "../helpers"
+import { toggleColor } from "../../helpers/colorHelpers"
 
 /**
  * Implementation of classical chess.

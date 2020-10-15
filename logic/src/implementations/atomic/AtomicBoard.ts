@@ -2,7 +2,7 @@ import { List } from "immutable";
 import { CellPosition } from "../../interface/types";
 import { Piece } from "../../interface/Piece";
 import { RegularBoard } from "../regular/RegularBoard";
-import { positionsNextTo } from "../helpers";
+import { positionsNextTo } from "../../helpers/colorHelpers";
 import { Pawn } from "../regular/regularPieces";
 
 /**

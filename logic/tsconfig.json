@@ -3,7 +3,8 @@
         "moduleResolution": "node",
         "target": "ES6",
         "declaration": true,
-        "outDir": "./dist"
+        "outDir": "./dist",
+        "strictNullChecks": true
     },
     "include": [
         "src/**/*"

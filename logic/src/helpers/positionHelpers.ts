@@ -1,15 +1,11 @@
-import { List } from "immutable";
-import { Action } from "../interface/Action";
-import { Piece } from "../interface/Piece";
-import { CellPosition, Color } from "../interface/types";
+import { List } from "immutable"
+import { CellPosition } from "../interface/types"
 
 /**
- * Given WHITE returns BLACK and given BLACK returns WHITE.
- * 
- * @param color Color to be toggled
+ * Creates a CellPosition object
  */
-export function toggleColor(color: Color) {
-    return color === Color.WHITE ? Color.BLACK : Color.WHITE
+export function pos(x: number, y: number): CellPosition {
+    return { x, y }
 }
 
 /**
@@ -34,20 +30,6 @@ export function positionsNextTo({ x, y }: CellPosition, diagonally: boolean): Li
             : []
         )
     ])
-}
-
-/**
- * Produces a typical action of moving and capturing into a tile
- * 
- * @param piece Piece this action is related to
- * @param toPos Position to move onto and capture at
- */
-export function moveCaptureAction(piece: Piece, toPos: CellPosition): Action {
-    return {
-        piece,
-        moveTo: toPos,
-        captureAt: List([toPos])
-    }
 }
 
 /**
