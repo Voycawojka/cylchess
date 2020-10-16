@@ -29,6 +29,12 @@ export interface Board {
     readonly turnOf: Color
 
     /**
+     * Determines piece's value. Higher number means the piece is more valuable.
+     * This is used by AI. Better estimated values will allow the AI to play the variant better.
+     */
+    pieceValue(piece: Piece): number
+
+    /**
      * Returns a piece at the <x,y> position.
      * Null means there is no piece at this position either because the cell is empty or because the position is outside of the board.
      */
@@ -44,4 +50,21 @@ export interface Board {
      * Does *not* mutate the object.
      */
     applyAction(action: Action): Board
+
+    /**
+     * Checks if the action is valid.
+     * Used to apply variant-wide action filtering (e.g. rejecting actions that would cause a check or a checkmate).
+     */
+    validateAction(action: Action): boolean
+
+    /**
+     * Returns the winning color. If the game is not yet won by anyone returns null.
+     */
+    winner(): Color | null
+
+    /**
+     * Checks if the game ended in a draw
+     */
+    isDraw(): boolean
 }
+

@@ -3,30 +3,38 @@ import { Action } from "../../interface/Action";
 import { Board } from "../../interface/Board";
 import { Piece } from "../../interface/Piece";
 import { CellPosition, Color } from "../../interface/types";
-import { jumperActions, moveCaptureAction, unlimitedWalkerActions } from "../../helpers/actionHelpers";
+import { jumperActions, walkerActions } from "../../helpers/actionHelpers";
 import { pos } from "../../helpers/positionHelpers";
-import { isEmptyLine } from "../../helpers/boardHelpers";
+import { isEmptyLine, isSafe } from "../../helpers/boardHelpers";
+import { toggleColor } from "../../helpers/colorHelpers";
 
 export class Pawn implements Piece {
     readonly display: string
     readonly name: string = "PIECE.REGULAR.PAWN"
 
-    constructor(readonly color: Color, readonly position: CellPosition, private readonly alreadyMoved = false) {
+    constructor(readonly color: Color, readonly position: CellPosition, private readonly movedTimes = 0) {
         this.display = this.color === Color.WHITE ? "2659" : "265F"
     }
-    
-    possibleActions(board: Board): List<Action> {
 
+    possibleActions(board: Board): List<Action> {
+        const direction = this.color === Color.WHITE ? -1 : 1
+        const maxMoves = this.movedTimes === 0 ? 2 : 1
+
+        const normalMoves = walkerActions(this, board, List([pos(0, direction)]), maxMoves)
+
+        // TODO en passant
+
+        return normalMoves
     }
 
     moved(pos: CellPosition): Pawn {
-        return new Pawn(this.color, pos, true)
+        return new Pawn(this.color, pos, this.movedTimes + 1)
     }
 }
 
 export class Knight implements Piece {
     readonly display: string
-    readonly name: string = "PIECE.REGULAR.PAWN"
+    readonly name: string = "PIECE.REGULAR.KNIGHT"
 
     constructor(readonly color: Color, readonly position: CellPosition) {
         this.display = this.color === Color.WHITE ? "2658" : "265E"
@@ -53,7 +61,7 @@ export class Bishop implements Piece {
     }
 
     possibleActions(board: Board): List<Action> {
-        return unlimitedWalkerActions(this, board, List([pos(-1, -1), pos(-1, 1), pos(1, -1), pos(1, 1)]))
+        return walkerActions(this, board, List([pos(-1, -1), pos(-1, 1), pos(1, -1), pos(1, 1)]))
     }
 
     moved(pos: CellPosition): Bishop {
@@ -70,7 +78,7 @@ export class Rook implements Piece {
     }
 
     possibleActions(board: Board): List<Action> {
-        return unlimitedWalkerActions(this, board, List([pos(-1, 0), pos(1, 0), pos(0, -1), pos(0, 1)]))
+        return walkerActions(this, board, List([pos(-1, 0), pos(1, 0), pos(0, -1), pos(0, 1)]))
     }
 
     moved(pos: CellPosition): Rook {
@@ -87,7 +95,7 @@ export class Queen implements Piece {
     }
 
     possibleActions(board: Board): List<Action> {
-        return unlimitedWalkerActions(this, board, List([
+        return walkerActions(this, board, List([
             pos(-1, 0), pos(1, 0), pos(0, -1), pos(0, 1),
             pos(-1, -1), pos(-1, 1), pos(1, -1), pos(1, 1)
         ]))
@@ -107,13 +115,16 @@ export class King implements Piece {
     }
 
     possibleActions(board: Board): List<Action> {
+        const opponentColor = toggleColor(this.color)
+
         const normalActions = jumperActions(this, board, List([pos(1, 0), pos(-1, 0), pos(0, 1), pos(0, -1)]))
+            .filter(action => !action.moveTo || isSafe(action.moveTo, board, opponentColor))
         
-        const castlingActions: List<Action> = this.alreadyMoved
+        const castlingActions: List<Action> = this.alreadyMoved || !isSafe(this.position, board, opponentColor)
             ? List([])
             : board.pieces
                 .filter(piece => piece.color === this.color && piece instanceof Rook && !piece.alreadyMoved)
-                .filter(piece => isEmptyLine(this.position, piece.position, board))
+                .filter(piece => isEmptyLine(this.position, piece.position, board, opponentColor))
                 .map(rook => ({
                         piece: this,
                         moveTo: pos(0, 0), // TODO where to move?

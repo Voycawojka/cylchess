@@ -36,21 +36,22 @@ export function jumperActions(piece: Piece, board: Board, offsets: List<CellPosi
 }
 
 /**
- * Produces a typical set of actions for a piece walking in endless straight lines (like a bishop or a queen in classical chess).
+ * Produces a typical set of actions for a piece walking in straight lines (like a bishop or a queen in classical chess).
  * Pieces of the same color block movement, others block movement and are captured
  * 
  * @param piece Piece those actions are related to
  * @param board Curren board
  * @param directionOffsets Direction vectors. For example <1, 0> will allow the piece to move endlessly to the right and <-2,-2> will allow the piece to move endlessly diagonally to the top-left jumping every other space
+ * @param max Determines maximum number of spaces the piece can move
  */
-export function unlimitedWalkerActions(piece: Piece, board: Board, directionOffsets: List<CellPosition>): List<Action> {
+export function walkerActions(piece: Piece, board: Board, directionOffsets: List<CellPosition>, max: number = Infinity): List<Action> {
     return directionOffsets
         .flatMap(vector => {
             const traversedCells: CellPosition[] = []
             let pos = offset(piece.position, vector.x, vector.y)
             let pieceAtCell = board.pieceAt(pos.x, pos.y)
 
-            while (pieceAtCell === null && board.inBoard(pos.x, pos.y)) {
+            while (pieceAtCell === null && board.inBoard(pos.x, pos.y) && traversedCells.length < max) {
                 traversedCells.push(pos)
                 pieceAtCell = board.pieceAt(pos.x, pos.y)
             }
