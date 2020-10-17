@@ -1,7 +1,13 @@
-import { Args, Int, Mutation, Query, Resolver } from "@nestjs/graphql"
+import { Args, Int, Mutation, Query, Resolver, Subscription } from "@nestjs/graphql"
+import { PubSub } from "graphql-subscriptions"
 import { List } from "immutable"
 import { Room } from "./room.model"
 import { RoomService } from "./room.service"
+
+const pubSub = new PubSub()
+const events = {
+    roomCreated: "roomCreated"
+}
 
 @Resolver(of => Room)
 export class RoomResolver {
@@ -23,8 +29,13 @@ export class RoomResolver {
         @Args({ name: "playerName" }) playerName: string, 
         @Args({ name: "variantIndex", type: () => Int }) variantIndex: number
     ): Room {
-        return this.roomService.createRoom(playerName, variantIndex)
+        const newRoom = this.roomService.createRoom(playerName, variantIndex)
+        pubSub.publish(events.roomCreated, { roomCreated: newRoom })
+        return newRoom
     }
 
-    
+    @Subscription(returns => Room)
+    roomCreated() {
+        return pubSub.asyncIterator(events.roomCreated)
+    }
 }

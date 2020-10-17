@@ -1,9 +1,11 @@
 {
     "compilerOptions": {
         "moduleResolution": "node",
+        "module": "CommonJS",
         "target": "ES6",
         "declaration": true,
-        "strictNullChecks": true
+        "strictNullChecks": true,
+        "outDir": "dist/"
     },
     "include": [
         "src/**/*"
