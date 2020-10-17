@@ -1,5 +1,4 @@
-import { ObjectType } from "@nestjs/graphql"
-import { Field } from "@nestjs/graphql/dist/decorators/field.decorator"
+import { Field, ObjectType } from "@nestjs/graphql"
 
 @ObjectType()
 export class VersionData {

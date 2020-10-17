@@ -38,3 +38,4 @@ registerVariant("VARIANT.ATOMIC.NAME", "VARIANT.ATOMIC.DESC", () => new boards.A
 registerVariant("VARIANT.CYLCHESS.NAME", "VARIANT.CYLCHESS.DESC", () => new boards.CylchessBoard())
 
 export const variants = List(mutableVariants)
+export const version = "0.0.1"

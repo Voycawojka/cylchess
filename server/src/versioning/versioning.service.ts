@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common"
 import { VersionData } from "./versioning.model"
-import { variants } from "cylchess-logic"
+// import { version as logicVersion } from "cylchess-logic"
 
 @Injectable()
 export class VersioningService {
@@ -9,7 +9,8 @@ export class VersioningService {
         const data = new VersionData()
         
         data.server = process.env.npm_package_version
-        data.logic = variants.get(0).name
+        // data.logic = logicVersion
+        data.logic = "???"
 
         return data
     }
