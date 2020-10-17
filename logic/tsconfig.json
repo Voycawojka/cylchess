@@ -3,7 +3,6 @@
         "moduleResolution": "node",
         "target": "ES6",
         "declaration": true,
-        "outDir": "./dist",
         "strictNullChecks": true
     },
     "include": [
