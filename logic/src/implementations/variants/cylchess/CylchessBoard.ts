@@ -1,8 +1,8 @@
-import { List } from "immutable";
-import { Piece } from "../../interface/Piece";
-import { RegularBoard } from "../regular/RegularBoard";
-import { Bishop, King, Knight, Pawn, Queen, Rook } from "../regular/regularPieces";
-import { Nwap, Spy } from "./cylchessPieces";
+import { List } from "immutable"
+import { Piece } from "../../../interface/Piece"
+import { RegularBoard } from "../regular/RegularBoard"
+import { Bishop, King, Knight, Pawn, Queen, Rook } from "../regular/regularPieces"
+import { Nwap, Spy } from "./cylchessPieces"
 
 /**
  * Implementation of a custom cyllindrical variant. 

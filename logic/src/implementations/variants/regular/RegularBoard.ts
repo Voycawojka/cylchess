@@ -1,12 +1,12 @@
 import { List, Map } from "immutable"
-import { Action } from "../../interface/Action"
-import { Board } from "../../interface/Board"
-import { CellPosition, Color } from "../../interface/types"
-import { Piece } from "../../interface/Piece"
-import { toggleColor } from "../../helpers/colorHelpers"
-import { Bishop, King, Knight, Pawn, Queen, Rook } from "./regularPieces"
-import { allActions, isSafe } from "../../helpers/boardHelpers"
-import { pos } from "../../helpers/positionHelpers"
+import { isSafe, allActions } from "../../../helpers/boardHelpers"
+import { toggleColor } from "../../../helpers/colorHelpers"
+import { pos } from "../../../helpers/positionHelpers"
+import { Action } from "../../../interface/Action"
+import { Board } from "../../../interface/Board"
+import { Piece } from "../../../interface/Piece"
+import { Color, CellPosition } from "../../../interface/types"
+import { Pawn, Knight, Bishop, Rook, Queen, King } from "./regularPieces"
 
 /**
  * Implementation of classical chess.

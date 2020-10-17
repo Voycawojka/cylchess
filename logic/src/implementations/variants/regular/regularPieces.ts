@@ -1,12 +1,12 @@
-import { List } from "immutable";
-import { Action } from "../../interface/Action";
-import { Board } from "../../interface/Board";
-import { Piece } from "../../interface/Piece";
-import { CellPosition, Color } from "../../interface/types";
-import { jumperActions, walkerActions } from "../../helpers/actionHelpers";
-import { pos } from "../../helpers/positionHelpers";
-import { isEmptyLine, isSafe } from "../../helpers/boardHelpers";
-import { toggleColor } from "../../helpers/colorHelpers";
+import { List } from "immutable"
+import { walkerActions, jumperActions } from "../../../helpers/actionHelpers"
+import { isSafe, isEmptyLine } from "../../../helpers/boardHelpers"
+import { toggleColor } from "../../../helpers/colorHelpers"
+import { pos } from "../../../helpers/positionHelpers"
+import { Action } from "../../../interface/Action"
+import { Board } from "../../../interface/Board"
+import { Piece } from "../../../interface/Piece"
+import { Color, CellPosition } from "../../../interface/types"
 
 export class Pawn implements Piece {
     readonly display: string

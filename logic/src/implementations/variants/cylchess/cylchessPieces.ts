@@ -1,11 +1,11 @@
-import { List } from "immutable";
-import { walkerActions } from "../../helpers/actionHelpers";
-import { pos, positionsNextTo } from "../../helpers/positionHelpers";
-import { Action } from "../../interface/Action";
-import { Board } from "../../interface/Board";
-import { Piece } from "../../interface/Piece";
-import { CellPosition, Color } from "../../interface/types";
-import { King } from "../regular/regularPieces";
+import { List } from "immutable"
+import { walkerActions } from "../../../helpers/actionHelpers"
+import { pos, positionsNextTo } from "../../../helpers/positionHelpers"
+import { Action } from "../../../interface/Action"
+import { Board } from "../../../interface/Board"
+import { Piece } from "../../../interface/Piece"
+import { Color, CellPosition } from "../../../interface/types"
+import { King } from "../regular/regularPieces"
 
 /**
  * Works like a regular Pawn but moves in the opossite direction

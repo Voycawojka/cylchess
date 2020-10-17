@@ -1,9 +1,9 @@
-import { List } from "immutable";
-import { CellPosition } from "../../interface/types";
-import { Piece } from "../../interface/Piece";
-import { RegularBoard } from "../regular/RegularBoard";
-import { Bishop, King, Knight, Pawn, Queen, Rook } from "../regular/regularPieces";
-import { positionsNextTo } from "../../helpers/positionHelpers";
+import { List } from "immutable"
+import { CellPosition } from "../../../interface/types"
+import { Piece } from "../../../interface/Piece"
+import { RegularBoard } from "../regular/RegularBoard"
+import { Bishop, King, Knight, Pawn, Queen, Rook } from "../regular/regularPieces"
+import { positionsNextTo } from "../../../helpers/positionHelpers"
 
 /**
  * Atomic Chess implementation.
