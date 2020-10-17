@@ -15,10 +15,12 @@ import { pos } from "../../helpers/positionHelpers"
 export class RegularBoard implements Board {
     readonly pieces: List<Piece>
     readonly turnOf: Color
+
+    private readonly startingColor = Color.WHITE
     
-    constructor(private readonly startingColor: Color, pieces?: List<Piece>, readonly turnCount = 0) {
+    constructor(pieces?: List<Piece>, readonly turnCount = 0) {
         this.pieces = pieces ?? this.createInitialPieces()
-        this.turnOf = turnCount % 2 === 0 ? startingColor : toggleColor(startingColor)
+        this.turnOf = turnCount % 2 === 0 ? this.startingColor : toggleColor(this.startingColor)
     }
 
     // This is a getter instead of a readonly property so that it can be overriden
@@ -114,6 +116,6 @@ export class RegularBoard implements Board {
      * Should be overriden if a child class has different constructor parameters than RegularBoard
      */
     protected constructNewInstance(pieces: List<Piece>): Board {
-        return new (this.constructor as any)(this.startingColor, pieces, this.turnCount + 1)
+        return new (this.constructor as any)(pieces, this.turnCount + 1)
     }
 }
