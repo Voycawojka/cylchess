@@ -5,7 +5,7 @@ import { pos } from "../../../helpers/positionHelpers"
 import { Action } from "../../../interface/Action"
 import { Board } from "../../../interface/Board"
 import { Piece } from "../../../interface/Piece"
-import { Color, CellPosition } from "../../../interface/types"
+import { Color, CellPosition, Size } from "../../../interface/types"
 import { Pawn, Knight, Bishop, Rook, Queen, King } from "./regularPieces"
 
 /**
@@ -24,7 +24,7 @@ export class RegularBoard implements Board {
     }
 
     // This is a getter instead of a readonly property so that it can be overriden
-    get size() {
+    get size(): Size {
         return { w: 10, h: 10 }
     }
 

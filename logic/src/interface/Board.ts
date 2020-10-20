@@ -1,6 +1,6 @@
 import { List } from "immutable";
 import { Action } from "./Action";
-import { CellPosition, Color } from "./types";
+import { CellPosition, Color, Size } from "./types";
 import { Piece } from "./Piece";
 
 /**
@@ -16,7 +16,7 @@ export interface Board {
     /**
      * The size of the board. In case of non-rectangular boards it represents a rectangle in which all the cells can fit.
      */
-    readonly size: { w: number; h: number }
+    readonly size: Size
 
     /**
      * The list of positions that are inside the `size` but are not part of the board. Used for non-rectangular boards.

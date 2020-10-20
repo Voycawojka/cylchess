@@ -10,8 +10,8 @@ export class PositionModel {
     y: number
 }
 
-@ObjectType()
-export class Size {
+@ObjectType("Size")
+export class SizeModel {
     @Field(type => Int)
     w: number
 
@@ -37,13 +37,16 @@ export class PieceModel {
 @ObjectType("Board")
 export class BoardModel {
     @Field(type => Int)
+    roomId: number
+
+    @Field(type => Int)
     variantIndex: number
 
     @Field(type => [PieceModel])
     pieces: List<PieceModel>
 
-    @Field(type => Size)
-    size: Size
+    @Field(type => SizeModel)
+    size: SizeModel
 
     @Field(type => [PositionModel])
     noneCells: List<PositionModel>
