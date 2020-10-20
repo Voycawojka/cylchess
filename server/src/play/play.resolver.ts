@@ -4,7 +4,7 @@ import { BoardModel } from "./play.model";
 import { PlayService } from "./play.service";
 
 @Resolver(of => BoardModel)
-export class ActionResolver {
+export class PlayResolver {
     constructor(private readonly playService: PlayService) {
     }
 
