@@ -11,3 +11,12 @@ export class Room {
     @Field(type => Int)
     variantIndex: number
 }
+
+@ObjectType()
+export class NewRoomData {
+    @Field(type => Room)
+    room: Room
+
+    @Field()
+    playerId: string
+}

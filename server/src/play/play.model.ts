@@ -1,4 +1,4 @@
-import { Field, Int, ObjectType } from "@nestjs/graphql"
+import { Field, InputType, Int, ObjectType } from "@nestjs/graphql"
 import { List } from "immutable"
 
 @ObjectType("Position")
@@ -53,4 +53,19 @@ export class BoardModel {
 
     @Field(type => Int)
     turnOfIndex: number
+}
+
+@InputType()
+export class ActionInput {
+    @Field(type => PositionModel)
+    pieceAt: PositionModel
+
+    @Field(type => PositionModel, { nullable: true })
+    moveTo?: PositionModel
+
+    @Field(type => [PositionModel])
+    captureAt: List<PositionModel>
+
+    @Field(type => ActionInput, { nullable: true })
+    chainedAction?: ActionInput
 }

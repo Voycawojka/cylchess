@@ -3,17 +3,24 @@ import { Player } from "cylchess-logic/dist/interface/Player";
 import { GameEngine } from "cylchess-logic/dist/engine/GameEngine"
 import { PubSub } from "graphql-subscriptions";
 import { Board } from "cylchess-logic/dist/interface/Board";
-import { BoardModel, PieceModel, PositionModel, SizeModel } from "./play.model";
-import { CellPosition, Size } from "cylchess-logic/dist/interface/types";
+import { ActionInput, BoardModel, PieceModel, PositionModel, SizeModel } from "./play.model";
+import { CellPosition, Color, Size } from "cylchess-logic/dist/interface/types";
 import { Piece } from "cylchess-logic/dist/interface/Piece";
+import { Action } from "cylchess-logic/dist/interface/Action";
+import { List } from "immutable";
 
 const pubsub = new PubSub()
 const boardIterator = pubsub.asyncIterator("boardStateChanged")
 
+type PromiseData = { playerId: string, board: Board, resolve: (board: Board) => void }
+let movePromises = List<PromiseData>()
+
 @Injectable()
 export class PlayService {
-    beginMatch(player1: Player, player2: Player, board: Board, roomId: number, variantIndex: number) {
-        const engine = new GameEngine(player1, player2)
+    beginMatch(playerId: string, playerId2: string, board: Board, roomId: number, variantIndex: number) {
+        const whitePlayer = this.getPlayer(playerId, Color.WHITE)
+        const blackPlayer = this.getPlayer(playerId2, Color.BLACK)
+        const engine = new GameEngine(whitePlayer, blackPlayer)
 
         engine.stateFeed(board).subscribe(newBoard => {
             const boardModel = this.boardToModel(newBoard, roomId, variantIndex)
@@ -21,8 +28,38 @@ export class PlayService {
         })
     }
 
+    getPlayer(playerId: string, color: Color): Player {
+        return {
+            name: `player-${playerId}`,
+            color,
+            isBot: false,
+            makeMove: (board: Board) => new Promise<Board>(resolve => { movePromises = movePromises.push({ playerId, board, resolve }) })
+        }
+    }
+
+    makeAction(playerId: string, actionInput: ActionInput): void {
+        const promise = movePromises?.find(promise => promise.playerId === playerId)
+
+        if (promise) {
+            movePromises = movePromises.filterNot(p => p === promise)
+
+            const action = this.inputToAction(actionInput, promise.board)
+            const newBoard = promise.board.applyAction(action)
+            promise.resolve(newBoard)
+        }
+    }
+
     boardStateChangedIterator() {
         return boardIterator
+    }
+
+    private inputToAction(input: ActionInput, board: Board): Action {
+        return {
+            piece: board.pieceAt(input.pieceAt.x, input.pieceAt.y),
+            moveTo: input.moveTo,
+            captureAt: input.captureAt,
+            chainedAction: !!input.chainedAction ? this.inputToAction(input.chainedAction, board) : undefined
+        }
     }
 
     private boardToModel(board: Board, roomId: number, variantIndex: number): BoardModel {
