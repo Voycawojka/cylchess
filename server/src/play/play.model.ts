@@ -56,15 +56,24 @@ export class BoardModel {
 }
 
 @InputType()
+export class PositionInput {
+    @Field(type => Int)
+    x: number
+
+    @Field(type => Int)
+    y: number
+}
+
+@InputType()
 export class ActionInput {
-    @Field(type => PositionModel)
-    pieceAt: PositionModel
+    @Field(type => PositionInput)
+    pieceAt: PositionInput
 
-    @Field(type => PositionModel, { nullable: true })
-    moveTo?: PositionModel
+    @Field(type => PositionInput, { nullable: true })
+    moveTo?: PositionInput
 
-    @Field(type => [PositionModel])
-    captureAt: List<PositionModel>
+    @Field(type => [PositionInput])
+    captureAt: List<PositionInput>
 
     @Field(type => ActionInput, { nullable: true })
     chainedAction?: ActionInput

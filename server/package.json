@@ -31,6 +31,7 @@
     "graphql-subscriptions": "^1.1.0",
     "graphql-tools": "^6.2.4",
     "immutable": "^4.0.0-rc.12",
+    "js-base64": "^3.5.2",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^6.6.3"

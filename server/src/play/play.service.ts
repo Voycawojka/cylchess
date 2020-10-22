@@ -12,14 +12,14 @@ import { List } from "immutable";
 const pubsub = new PubSub()
 const boardIterator = pubsub.asyncIterator("boardStateChanged")
 
-type PromiseData = { playerId: string, board: Board, resolve: (board: Board) => void }
+type PromiseData = { playerToken: string, board: Board, resolve: (board: Board) => void }
 let movePromises = List<PromiseData>()
 
 @Injectable()
 export class PlayService {
-    beginMatch(playerId: string, playerId2: string, board: Board, roomId: number, variantIndex: number) {
-        const whitePlayer = this.getPlayer(playerId, Color.WHITE)
-        const blackPlayer = this.getPlayer(playerId2, Color.BLACK)
+    beginMatch(whitePlayerToken: string, blackPlayerToken: string, board: Board, roomId: number, variantIndex: number): void {
+        const whitePlayer = this.createOnlinePlayer(whitePlayerToken, Color.WHITE)
+        const blackPlayer = this.createOnlinePlayer(blackPlayerToken, Color.BLACK)
         const engine = new GameEngine(whitePlayer, blackPlayer)
 
         engine.stateFeed(board).subscribe(newBoard => {
@@ -28,17 +28,8 @@ export class PlayService {
         })
     }
 
-    getPlayer(playerId: string, color: Color): Player {
-        return {
-            name: `player-${playerId}`,
-            color,
-            isBot: false,
-            makeMove: (board: Board) => new Promise<Board>(resolve => { movePromises = movePromises.push({ playerId, board, resolve }) })
-        }
-    }
-
-    makeAction(playerId: string, actionInput: ActionInput): void {
-        const promise = movePromises?.find(promise => promise.playerId === playerId)
+    makeAction(playerToken: string, actionInput: ActionInput): void {
+        const promise = movePromises?.find(promise => promise.playerToken === playerToken)
 
         if (promise) {
             movePromises = movePromises.filterNot(p => p === promise)
@@ -51,6 +42,15 @@ export class PlayService {
 
     boardStateChangedIterator() {
         return boardIterator
+    }
+
+    private createOnlinePlayer(playerToken: string, color: Color): Player {
+        return {
+            name: `player-${playerToken}`, // TODO use actual player username instead
+            color,
+            isBot: false,
+            makeMove: (board: Board) => new Promise<Board>(resolve => { movePromises = movePromises.push({ playerToken, board, resolve }) })
+        }
     }
 
     private inputToAction(input: ActionInput, board: Board): Action {

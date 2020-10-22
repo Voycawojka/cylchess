@@ -1,9 +1,7 @@
 import { Args, Int, Mutation, Query, Resolver, Subscription } from "@nestjs/graphql"
 import { PubSub } from "graphql-subscriptions"
 import { List } from "immutable"
-import { BoardModel } from "src/play/play.model"
-import { PlayService } from "src/play/play.service"
-import { NewRoomData, Room } from "./room.model"
+import { RoomWithPlayerToken, Room } from "./room.model"
 import { RoomService } from "./room.service"
 
 const pubSub = new PubSub()
@@ -13,32 +11,41 @@ const events = {
 
 @Resolver(of => Room)
 export class RoomResolver {
-    constructor(private readonly roomService: RoomService, private readonly playService: PlayService) {
+    constructor(private readonly roomService: RoomService) {
     }
 
     @Query(returns => Room, { nullable: true })
     room(@Args("id", { type: () => Int }) id: number): Room | null {
-        return this.roomService.findById(id)
+        return this.roomService.findById(id).model
     }
 
     @Query(returns => [Room])
     rooms(): List<Room> {
-        return this.roomService.allRooms()
+        return this.roomService.allRooms().map(room => room.model)
     }
 
-    @Mutation(returns => NewRoomData)
+    @Mutation(returns => RoomWithPlayerToken)
     createRoom(
-        @Args("playerName" ) playerName: string, 
+        @Args("playerName") playerName: string, 
         @Args("variantIndex", { type: () => Int }) variantIndex: number
-    ): NewRoomData {
+    ): RoomWithPlayerToken {
         const newRoom = this.roomService.createRoom(playerName, variantIndex)
         pubSub.publish(events.roomCreated, { roomCreated: newRoom })
-        return newRoom
+
+        const roomData = new RoomWithPlayerToken()
+
+        roomData.room = newRoom.model
+        roomData.playerToken = newRoom.playerTokens[0]
+
+        return roomData
     }
 
-    @Mutation(returns => [String])
-    joinRoom(@Args("id", { type: () => Int }) id: number): [String, String] {
-        this.playService.beginMatch()
+    @Mutation(returns => RoomWithPlayerToken)
+    joinRoom(
+        @Args("playerName") playerName: string,
+        @Args("roomId", { type: () => Int }) roomId: number
+    ): RoomWithPlayerToken {
+        return this.roomService.joinRoomAndBeginMatch(playerName, roomId)
     }
 
     @Subscription(returns => Room)

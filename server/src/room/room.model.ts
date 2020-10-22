@@ -5,18 +5,18 @@ export class Room {
     @Field(type => Int)
     id: number
 
-    @Field()
-    waitingPlayerName: string
+    @Field(type => [String])
+    playerNames: [string] | [string, string]
 
     @Field(type => Int)
     variantIndex: number
 }
 
 @ObjectType()
-export class NewRoomData {
+export class RoomWithPlayerToken {
     @Field(type => Room)
     room: Room
 
     @Field()
-    playerId: string
+    playerToken: string
 }
