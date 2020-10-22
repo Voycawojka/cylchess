@@ -33,10 +33,12 @@ export class PlayService {
 
         if (promise) {
             movePromises = movePromises.filterNot(p => p === promise)
-
             const action = this.inputToAction(actionInput, promise.board)
-            const newBoard = promise.board.applyAction(action)
-            promise.resolve(newBoard)
+            
+            if (action) {
+                const newBoard = promise.board.applyAction(action)
+                promise.resolve(newBoard)
+            }
         }
     }
 
@@ -53,13 +55,17 @@ export class PlayService {
         }
     }
 
-    private inputToAction(input: ActionInput, board: Board): Action {
-        return {
-            piece: board.pieceAt(input.pieceAt.x, input.pieceAt.y),
-            moveTo: input.moveTo,
-            captureAt: input.captureAt,
-            chainedAction: !!input.chainedAction ? this.inputToAction(input.chainedAction, board) : undefined
-        }
+    private inputToAction(input: ActionInput, board: Board): Action | undefined {
+        const piece = board.pieceAt(input.pieceAt.x, input.pieceAt.y)
+
+        return !!piece
+            ? {
+                piece,
+                moveTo: input.moveTo,
+                captureAt: input.captureAt,
+                chainedAction: !!input.chainedAction ? this.inputToAction(input.chainedAction, board) : undefined
+            }
+            : undefined
     }
 
     private boardToModel(board: Board, roomId: number, variantIndex: number): BoardModel {

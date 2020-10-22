@@ -16,7 +16,7 @@ export class RoomResolver {
 
     @Query(returns => Room, { nullable: true })
     room(@Args("id", { type: () => Int }) id: number): Room | null {
-        return this.roomService.findById(id).model
+        return this.roomService.findById(id)?.model ?? null
     }
 
     @Query(returns => [Room])
@@ -40,12 +40,12 @@ export class RoomResolver {
         return roomData
     }
 
-    @Mutation(returns => RoomWithPlayerToken)
+    @Mutation(returns => RoomWithPlayerToken, { nullable: true })
     joinRoom(
         @Args("playerName") playerName: string,
         @Args("roomId", { type: () => Int }) roomId: number
-    ): RoomWithPlayerToken {
-        return this.roomService.joinRoomAndBeginMatch(playerName, roomId)
+    ): RoomWithPlayerToken | null {
+        return this.roomService.joinRoomAndBeginMatch(playerName, roomId) ?? null
     }
 
     @Subscription(returns => Room)

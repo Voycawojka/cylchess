@@ -13,8 +13,8 @@ interface RoomWithPlayerIds {
 @Injectable()
 export class RoomService {
     private rooms: List<RoomWithPlayerIds> = List()
-    private nextRoomId: number = 0
-    private nextPlayerId: number = 0
+    private nextRoomId = 0
+    private nextPlayerId = 0
 
     constructor(private playService: PlayService, private variantService: VariantService) {
     }
@@ -23,8 +23,8 @@ export class RoomService {
         return this.rooms.map(room => room)
     }
 
-    findById(id: number): RoomWithPlayerIds {
-        return this.rooms.find(room => room.model.id === id)
+    findById(id: number): RoomWithPlayerIds | null {
+        return this.rooms.find(room => room.model.id === id) ?? null
     }
 
     createRoom(playerName: string, variantIndex: number): RoomWithPlayerIds {
@@ -45,11 +45,20 @@ export class RoomService {
         return roomWithIds
     }
 
-    joinRoomAndBeginMatch(playerName: string, roomId: number): RoomWithPlayerToken {
+    joinRoomAndBeginMatch(playerName: string, roomId: number): RoomWithPlayerToken | null {
         const room = this.findById(roomId)
+
+        if (!room) {
+            return null
+        }
+
         const newPlayerToken = this.generatePlayerToken(playerName)
 
-        room.playerTokens.push()
+        room.playerTokens.push(newPlayerToken)
+
+        if (room.playerTokens.length !== 2) {
+            return null
+        }
 
         const [whitePlayerToken, blackPlayerToken] = room.playerTokens.sort(() => Math.random() - 0.5) // TODO this should be chosen by the player during room creation
         const board = this.variantService.createBoard(room.model.variantIndex)

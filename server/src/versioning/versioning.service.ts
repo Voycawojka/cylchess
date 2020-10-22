@@ -8,7 +8,7 @@ export class VersioningService {
     getVersionData(): VersionData {
         const data = new VersionData()
         
-        data.server = process.env.npm_package_version
+        data.server = process.env.npm_package_version ?? "_unknown_"
         data.logic = logicVersion
 
         return data
