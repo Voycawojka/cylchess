@@ -9,7 +9,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Filip A. Kowalski",
-  "license": "GPL-3.0-or-later",
+  "license": "AGPL-3.0-or-later",
   "dependencies": {
     "immutable": "^4.0.0-rc.12",
     "rxjs": "^6.6.3"

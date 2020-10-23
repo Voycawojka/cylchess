@@ -4,7 +4,7 @@
   "description": "Cylchess GraphQL-based server",
   "author": "Filip A. Kowalski",
   "private": true,
-  "license": "GPL-3.0-or-later",
+  "license": "AGPL-3.0-or-later",
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "nest build",
