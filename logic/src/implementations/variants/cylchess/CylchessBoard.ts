@@ -1,5 +1,7 @@
 import { List } from "immutable"
+import { pos } from "../../../helpers/positionHelpers"
 import { Piece } from "../../../interface/Piece"
+import { Color } from "../../../interface/types"
 import { RegularBoard } from "../regular/RegularBoard"
 import { Bishop, King, Knight, Pawn, Queen, Rook } from "../regular/regularPieces"
 import { Nwap, Spy } from "./cylchessPieces"
@@ -12,7 +14,7 @@ import { Nwap, Spy } from "./cylchessPieces"
 export class CylchessBoard extends RegularBoard {
     // This variant has a bigger board
     get size() {
-        return { w: 10, h: 15 }
+        return { w: 8, h: 14 }
     }
 
     pieceValue(piece: Piece): number {
@@ -44,7 +46,59 @@ export class CylchessBoard extends RegularBoard {
     // This variant has custom starting positions
     protected createInitialPieces(): List<Piece> {
         return List([
+            new Nwap(Color.WHITE, pos(0, 2)),
+            new Nwap(Color.WHITE, pos(1, 2)),
+            new Nwap(Color.WHITE, pos(2, 2)),
+            new Nwap(Color.WHITE, pos(3, 2)),
+            new Nwap(Color.WHITE, pos(4, 2)),
+            new Nwap(Color.WHITE, pos(5, 2)),
+            new Nwap(Color.WHITE, pos(6, 2)),
+            new Nwap(Color.WHITE, pos(7, 2)),
 
+            new Rook(Color.WHITE, pos(0, 3)),
+            new Knight(Color.WHITE, pos(1, 3)),
+            new Bishop(Color.WHITE, pos(2, 3)),
+            new Queen(Color.WHITE, pos(3, 3)),
+            new King(Color.WHITE, pos(4, 3)),
+            new Bishop(Color.WHITE, pos(5, 3)),
+            new Knight(Color.WHITE, pos(6, 3)),
+            new Rook(Color.WHITE, pos(7, 3)),
+
+            new Pawn(Color.WHITE, pos(0, 4)),
+            new Pawn(Color.WHITE, pos(1, 4)),
+            new Pawn(Color.WHITE, pos(2, 4)),
+            new Pawn(Color.WHITE, pos(3, 4)),
+            new Pawn(Color.WHITE, pos(4, 4)),
+            new Pawn(Color.WHITE, pos(5, 4)),
+            new Pawn(Color.WHITE, pos(6, 4)),
+            new Spy(Color.WHITE, pos(7, 4)),
+
+            new Pawn(Color.BLACK, pos(0, 9)),
+            new Pawn(Color.BLACK, pos(1, 9)),
+            new Pawn(Color.BLACK, pos(2, 9)),
+            new Pawn(Color.BLACK, pos(3, 9)),
+            new Pawn(Color.BLACK, pos(4, 9)),
+            new Pawn(Color.BLACK, pos(5, 9)),
+            new Pawn(Color.BLACK, pos(6, 9)),
+            new Pawn(Color.BLACK, pos(7, 9)),
+
+            new Rook(Color.BLACK, pos(0, 10)),
+            new Knight(Color.BLACK, pos(1, 10)),
+            new Bishop(Color.BLACK, pos(2, 10)),
+            new Queen(Color.BLACK, pos(3, 10)),
+            new King(Color.BLACK, pos(4, 10)),
+            new Bishop(Color.BLACK, pos(5, 10)),
+            new Knight(Color.BLACK, pos(6, 10)),
+            new Rook(Color.BLACK, pos(7, 10)),
+
+            new Nwap(Color.BLACK, pos(0, 11)),
+            new Nwap(Color.BLACK, pos(1, 11)),
+            new Nwap(Color.BLACK, pos(2, 11)),
+            new Nwap(Color.BLACK, pos(3, 11)),
+            new Nwap(Color.BLACK, pos(4, 11)),
+            new Nwap(Color.BLACK, pos(5, 11)),
+            new Nwap(Color.BLACK, pos(6, 11)),
+            new Spy(Color.BLACK, pos(7, 11)),
         ])
     }
 

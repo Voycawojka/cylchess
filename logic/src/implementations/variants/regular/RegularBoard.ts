@@ -25,7 +25,7 @@ export class RegularBoard implements Board {
 
     // This is a getter instead of a readonly property so that it can be overriden
     get size(): Size {
-        return { w: 10, h: 10 }
+        return { w: 8, h: 8 }
     }
 
     // This is a getter instead of a readonly property so that it can be overriden
@@ -107,7 +107,41 @@ export class RegularBoard implements Board {
      */
     protected createInitialPieces(): List<Piece> {
         return List([
+            new Rook(Color.WHITE, pos(0, 0)),
+            new Knight(Color.WHITE, pos(1, 0)),
+            new Bishop(Color.WHITE, pos(2, 0)),
+            new Queen(Color.WHITE, pos(3, 0)),
+            new King(Color.WHITE, pos(4, 0)),
+            new Bishop(Color.WHITE, pos(5, 0)),
+            new Knight(Color.WHITE, pos(6, 0)),
+            new Rook(Color.WHITE, pos(7, 0)),
+            
+            new Pawn(Color.WHITE, pos(0, 1)),
+            new Pawn(Color.WHITE, pos(1, 1)),
+            new Pawn(Color.WHITE, pos(2, 1)),
+            new Pawn(Color.WHITE, pos(3, 1)),
+            new Pawn(Color.WHITE, pos(4, 1)),
+            new Pawn(Color.WHITE, pos(5, 1)),
+            new Pawn(Color.WHITE, pos(6, 1)),
+            new Pawn(Color.WHITE, pos(7, 1)),
 
+            new Pawn(Color.BLACK, pos(0, 6)),
+            new Pawn(Color.BLACK, pos(1, 6)),
+            new Pawn(Color.BLACK, pos(2, 6)),
+            new Pawn(Color.BLACK, pos(3, 6)),
+            new Pawn(Color.BLACK, pos(4, 6)),
+            new Pawn(Color.BLACK, pos(5, 6)),
+            new Pawn(Color.BLACK, pos(6, 6)),
+            new Pawn(Color.BLACK, pos(7, 6)),
+
+            new Rook(Color.BLACK, pos(0, 7)),
+            new Knight(Color.BLACK, pos(1, 7)),
+            new Bishop(Color.BLACK, pos(2, 7)),
+            new Queen(Color.BLACK, pos(3, 7)),
+            new King(Color.BLACK, pos(4, 7)),
+            new Bishop(Color.BLACK, pos(5, 7)),
+            new Knight(Color.BLACK, pos(6, 7)),
+            new Rook(Color.BLACK, pos(7, 7)),
         ])
     }
 
