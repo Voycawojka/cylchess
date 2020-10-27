@@ -5,7 +5,7 @@ import { Board } from "cylchess-logic/dist/interface/Board";
 @Injectable()
 export class VariantService {
 
-    createBoard(variantId: number): Board {
-        return variants[variantId].createBoard()
+    createBoard(variantId: number): Board | null {
+        return variants.get(variantId)?.createBoard() ?? null
     }
 }

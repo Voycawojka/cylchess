@@ -35,7 +35,7 @@ export class PlayService {
             movePromises = movePromises.filterNot(p => p === promise)
             const action = this.inputToAction(actionInput, promise.board)
             
-            if (action) {
+            if (action && promise.board.validateAction(action)) {
                 const newBoard = promise.board.applyAction(action)
                 promise.resolve(newBoard)
             }

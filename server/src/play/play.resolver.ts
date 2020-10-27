@@ -9,10 +9,10 @@ export class PlayResolver {
 
     @Mutation(returns => Boolean)
     makeAction(
-        @Args("playerId") playerId: string,
+        @Args("playerToken") playerToken: string,
         @Args("action") action: ActionInput
     ): boolean {
-        this.playService.makeAction(playerId, action)
+        this.playService.makeAction(playerToken, action)
         return true
     }
 
