@@ -6,12 +6,18 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "author": "Filip A. Kowalski",
   "license": "AGPL-3.0-or-later",
   "dependencies": {
     "immutable": "^4.0.0-rc.12",
     "rxjs": "^6.6.3"
+  },
+  "devDependencies": {
+    "@types/jest": "^26.0.15",
+    "jest": "^26.6.1",
+    "ts-jest": "^26.4.3",
+    "typescript": "^4.0.5"
   }
 }

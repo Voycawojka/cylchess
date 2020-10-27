@@ -3,7 +3,6 @@ import { Action } from "../interface/Action";
 import { Board } from "../interface/Board";
 import { Piece } from "../interface/Piece";
 import { CellPosition } from "../interface/types";
-import { toggleColor } from "./colorHelpers";
 import { offset } from "./positionHelpers";
 
 /**
@@ -31,8 +30,8 @@ export function moveCaptureAction(piece: Piece, toPos: CellPosition): Action {
  */
 export function jumperActions(piece: Piece, board: Board, offsets: List<CellPosition>): List<Action> {
     return List(offsets)
-        .map(off => moveCaptureAction(piece, offset(this.position, off.x, off.y)))
-        .filter(({ moveTo }) => moveTo === undefined || board.pieceAt(moveTo.x, moveTo.y)?.color !== this.color)
+        .map(off => moveCaptureAction(piece, offset(piece.position, off.x, off.y)))
+        .filter(({ moveTo }) => moveTo === undefined || board.pieceAt(moveTo.x, moveTo.y)?.color !== piece.color)
 }
 
 /**
@@ -48,16 +47,17 @@ export function walkerActions(piece: Piece, board: Board, directionOffsets: List
     return directionOffsets
         .flatMap(vector => {
             const traversedCells: CellPosition[] = []
-            let pos = offset(piece.position, vector.x, vector.y)
+            let pos = piece.position
             let pieceAtCell = board.pieceAt(pos.x, pos.y)
 
-            while (pieceAtCell === null && board.inBoard(pos.x, pos.y) && traversedCells.length < max) {
+            do {
+                pos = offset(pos, vector.x, vector.y)
                 traversedCells.push(pos)
                 pieceAtCell = board.pieceAt(pos.x, pos.y)
-            }
+            } while (!pieceAtCell && board.inBoard(pos.x, pos.y) && traversedCells.length <= max)
 
-            if (pieceAtCell !== null && pieceAtCell.color !== piece.color) {
-                traversedCells.push(pos)
+            if (!pieceAtCell || pieceAtCell.color === piece.color) {
+                traversedCells.pop()
             }
 
             return List(traversedCells)
