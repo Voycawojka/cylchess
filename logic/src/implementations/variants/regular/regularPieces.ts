@@ -1,5 +1,5 @@
 import { List } from "immutable"
-import { walkerActions, jumperActions } from "../../../helpers/actionHelpers"
+import { walkerActions, jumperActions, walkerAction } from "../../../helpers/actionHelpers"
 import { isSafe, isEmptyLine } from "../../../helpers/boardHelpers"
 import { toggleColor } from "../../../helpers/colorHelpers"
 import { pos } from "../../../helpers/positionHelpers"
@@ -17,12 +17,12 @@ export class Pawn implements Piece {
     }
 
     possibleActions(board: Board): List<Action> {
-        const direction = this.color === Color.WHITE ? -1 : 1
+        const direction = this.color === Color.WHITE ? 1 : -1
         const maxMoves = this.movedTimes === 0 ? 2 : 1
 
-        const normalMoves = walkerActions(this, board, List([pos(0, direction)]), maxMoves)
+        const normalMoves = walkerAction(this, board, pos(0, direction), maxMoves)
 
-        // TODO en passant
+        // TODO en passant and side capture
 
         return normalMoves
     }
@@ -118,9 +118,9 @@ export class King implements Piece {
         const opponentColor = toggleColor(this.color)
 
         const normalActions = jumperActions(this, board, List([pos(1, 0), pos(-1, 0), pos(0, 1), pos(0, -1)]))
-            .filter(action => !action.moveTo || isSafe(action.moveTo, board, opponentColor))
+            .filter(action => !action.moveTo || isSafe(action.moveTo, board, opponentColor, List([King])))
         
-        const castlingActions: List<Action> = this.alreadyMoved || !isSafe(this.position, board, opponentColor)
+        const castlingActions: List<Action> = this.alreadyMoved || !isSafe(this.position, board, opponentColor, List([King]))
             ? List([])
             : board.pieces
                 .filter(piece => piece.color === this.color && piece instanceof Rook && !piece.alreadyMoved)

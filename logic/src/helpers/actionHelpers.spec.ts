@@ -3,7 +3,7 @@ import { RegularBoard } from "../implementations/variants"
 import { King, Rook } from "../implementations/variants/regular/regularPieces"
 import { Piece } from "../interface/Piece"
 import { Color } from "../interface/types"
-import { jumperActions, moveCaptureAction, walkerActions } from "./actionHelpers"
+import { jumperActions, moveCaptureAction, walkerAction, walkerActions } from "./actionHelpers"
 import { pos } from "./positionHelpers"
 
 test("moveCaptureAction produces the right object", () => {
@@ -75,12 +75,11 @@ test("jumperActions will move onto fields taken by the opponent", () => {
     expect(action2.chainedAction).not.toBeDefined()
 })
 
-test("walkerActions move continously until opponent's piece is enountered, inclusive", () => {
+test("walkerAction move continously until opponent's piece is enountered, inclusive", () => {
     const board = new RegularBoard()
     const piece = board.pieceAt(3, 1) as Piece
-    const directionOffsets = List([pos(0, 1)])
 
-    const output = walkerActions(piece, board, directionOffsets)
+    const output = walkerAction(piece, board, pos(0, 1))
     const expectedPositions = List([
         pos(3, 2),
         pos(3, 3),
@@ -93,12 +92,11 @@ test("walkerActions move continously until opponent's piece is enountered, inclu
     expect(output.map(action => action.captureAt)).toEqual(expectedPositions.map(p => List([p])))
 })
 
-test("walkerActions move continously until same colored piece is encountered, exclusive", () => {
+test("walkerAction move continously until same colored piece is encountered, exclusive", () => {
     const board = new RegularBoard()
     const piece = new Rook(Color.BLACK, pos(3, 1))
-    const directionOffsets = List([pos(0, 1)])
 
-    const output = walkerActions(piece, board, directionOffsets)
+    const output = walkerAction(piece, board, pos(0, 1))
     const expectedPositions = List([
         pos(3, 2),
         pos(3, 3),
@@ -110,12 +108,11 @@ test("walkerActions move continously until same colored piece is encountered, ex
     expect(output.map(action => action.captureAt)).toEqual(expectedPositions.map(p => List([p])))
 })
 
-test("walkerActions move continously until the end of the board", () => {
+test("walkerAction move continously until the end of the board", () => {
     const board = new RegularBoard()
     const piece = new Rook(Color.BLACK, pos(4, 2))
-    const directionOffsets = List([pos(1, 0)])
 
-    const output = walkerActions(piece, board, directionOffsets)
+    const output = walkerAction(piece, board, pos(1, 0))
     const expectedPositions = List([
         pos(5, 2),
         pos(6, 2),
@@ -126,16 +123,33 @@ test("walkerActions move continously until the end of the board", () => {
     expect(output.map(action => action.captureAt)).toEqual(expectedPositions.map(p => List([p])))
 })
 
-test("walkerActions move up to a given range, if specified", () => {
+test("walkerAction move up to a given range, if specified", () => {
     const board = new RegularBoard()
     const piece = board.pieceAt(3, 1) as Piece
-    const directionOffsets = List([pos(0, 1)])
 
-    const output = walkerActions(piece, board, directionOffsets, 3)
+    const output = walkerAction(piece, board, pos(0, 1), 3)
     const expectedPositions = List([
         pos(3, 2),
         pos(3, 3),
         pos(3, 4)
+    ])
+
+    expect(output.map(action => action.moveTo)).toEqual(expectedPositions)
+    expect(output.map(action => action.captureAt)).toEqual(expectedPositions.map(p => List([p])))
+})
+
+test("walkerActions works as multiple walkerAction calls", () => {
+    const board = new RegularBoard()
+    const piece = board.pieceAt(3, 1) as Piece
+
+    const output = walkerActions(piece, board, List([pos(0, 1), pos(1, 1)]), 3)
+    const expectedPositions = List([
+        pos(3, 2),
+        pos(3, 3),
+        pos(3, 4),
+        pos(4, 2),
+        pos(5, 3),
+        pos(6, 4)
     ])
 
     expect(output.map(action => action.moveTo)).toEqual(expectedPositions)

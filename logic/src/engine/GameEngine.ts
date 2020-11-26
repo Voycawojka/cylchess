@@ -8,19 +8,18 @@ export class GameEngine {
     }
 
     stateFeed(board: Board): Observable<Board> {
-        return new Observable(subscriber => this.pushNextStates(board, subscriber))
+        return new Observable(subscriber => { this.pushNextStates(board, subscriber) })
     }
 
-    private pushNextStates(board: Board, subscriber: Subscriber<Board>): void {
-        this.nextState(board).then(newBoard => {
-            subscriber.next(newBoard)
+    private async pushNextStates(board: Board, subscriber: Subscriber<Board>): Promise<void> {
+        let currentBoard = board
 
-            if (!!newBoard.winner() || newBoard.isDraw()) {
-                subscriber.complete()
-            } else {
-                this.pushNextStates(newBoard, subscriber)
-            }
-        })
+        while (!currentBoard.winner() && !currentBoard.isDraw()) {
+            currentBoard = await this.nextState(currentBoard) 
+            subscriber.next(currentBoard)
+        }
+
+        subscriber.complete()
     }
 
     private nextState(board: Board): Promise<Board> {

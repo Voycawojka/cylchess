@@ -67,11 +67,29 @@ export class RegularBoard implements Board {
             : newBoard
     }
 
-    // By default all actions that would cause the opposite player to be a winner (see `winner` method) are invalid
+    // By default all actions that would cause 
+    // a) the opposite player to be a winner (see `winner` method)
+    // b) a piece to be outside of the board (see `inBoard` method)
+    // are invalid
     validateAction(action: Action): boolean {
         const hyphoteticalBoard = this.applyAction(action)
+        const hyphoteticalWinner = hyphoteticalBoard.winner()
 
-        return hyphoteticalBoard.winner() !== toggleColor(action.piece.color)
+        if (hyphoteticalWinner === toggleColor(action.piece.color)) {
+            return false
+        }
+
+        const isPieceOutside = !!hyphoteticalBoard.pieces.find(piece => !this.inBoard(piece.position.x, piece.position.y))
+
+        if (isPieceOutside) {
+            return false
+        }
+
+        if (action.chainedAction) {
+            return this.validateAction(action.chainedAction)
+        } else {
+            return true
+        }
     }
 
     // By default a player wins if the oponnent's king is in check and the player can't make any valid action

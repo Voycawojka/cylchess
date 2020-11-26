@@ -1,5 +1,5 @@
 import { List } from "immutable"
-import { walkerActions } from "../../../helpers/actionHelpers"
+import { walkerAction } from "../../../helpers/actionHelpers"
 import { pos, positionsNextTo } from "../../../helpers/positionHelpers"
 import { Action } from "../../../interface/Action"
 import { Board } from "../../../interface/Board"
@@ -19,10 +19,10 @@ export class Nwap implements Piece {
     }
 
     possibleActions(board: Board): List<Action> {
-        const direction = this.color === Color.WHITE ? 1 : -1
+        const direction = this.color === Color.WHITE ? -1 : 1
         const maxMoves = this.movedTimes === 0 ? 2 : 1
 
-        const normalMoves = walkerActions(this, board, List([pos(0, direction)]), maxMoves)
+        const normalMoves = walkerAction(this, board, pos(0, direction), maxMoves)
 
         // TODO en passant
 
