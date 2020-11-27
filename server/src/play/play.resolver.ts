@@ -12,11 +12,10 @@ export class PlayResolver {
         @Args("playerToken") playerToken: string,
         @Args("action") action: ActionInput
     ): boolean {
-        this.playService.makeAction(playerToken, action)
-        return true
+        return this.playService.makeAction(playerToken, action)
     }
 
-    @Subscription(returns => [BoardModel], {
+    @Subscription(returns => BoardModel, {
         filter: (payload, variables) => payload.boardStateChanged.roomId === variables.roomId
     })
     boardStateChanged(@Args("roomId", { type: () => Int }) roomId: number) {

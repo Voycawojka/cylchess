@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
 import { Player } from "cylchess-logic/dist/interface/Player";
 import { GameEngine } from "cylchess-logic/dist/engine/GameEngine"
 import { PubSub } from "graphql-subscriptions";
@@ -17,6 +17,8 @@ let movePromises = List<PromiseData>()
 
 @Injectable()
 export class PlayService {
+    private readonly logger = new Logger(PlayService.name)
+
     beginMatch(whitePlayerToken: string, blackPlayerToken: string, board: Board, roomId: number, variantIndex: number): void {
         const whitePlayer = this.createOnlinePlayer(whitePlayerToken, Color.WHITE)
         const blackPlayer = this.createOnlinePlayer(blackPlayerToken, Color.BLACK)
@@ -24,22 +26,31 @@ export class PlayService {
 
         engine.stateFeed(board).subscribe(newBoard => {
             const boardModel = this.boardToModel(newBoard, roomId, variantIndex)
-            pubsub.publish("boardStateChanged", boardModel)
+            pubsub.publish("boardStateChanged", { boardStateChanged: boardModel })
         })
     }
 
-    makeAction(playerToken: string, actionInput: ActionInput): void {
+    makeAction(playerToken: string, actionInput: ActionInput): boolean {
         const promise = movePromises?.find(promise => promise.playerToken === playerToken)
 
         if (promise) {
-            movePromises = movePromises.filterNot(p => p === promise)
             const action = this.inputToAction(actionInput, promise.board)
             
             if (action && promise.board.validateAction(action)) {
+                movePromises = movePromises.filterNot(p => p === promise)
+
                 const newBoard = promise.board.applyAction(action)
                 promise.resolve(newBoard)
+                
+                return true
             }
+            
+            this.logger.debug("The provided action data is invalid")
+            return false
         }
+
+        this.logger.debug("Cannot find the provided player token - the token either doesn't exist or is not currently accepting input")
+        return false
     }
 
     boardStateChangedIterator() {

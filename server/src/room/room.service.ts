@@ -81,6 +81,7 @@ export class RoomService {
     }
 
     private generatePlayerToken(name: string): string {
+        // TODO consider a JWT token instead
         this.nextPlayerId ++
         return Base64.encode(`${name}-${this.nextPlayerId}-${Math.floor(Math.random() * 1000000)}`)
     }
