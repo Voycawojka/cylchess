@@ -1,4 +1,4 @@
-import { Observable, Subscriber } from "rxjs";
+import { Observable, queueScheduler, Subscriber } from "rxjs";
 import { Board } from "../interface/Board";
 import { Player } from "../interface/Player";
 import { Color } from "../interface/types";
@@ -8,18 +8,23 @@ export class GameEngine {
     }
 
     stateFeed(board: Board): Observable<Board> {
-        return new Observable(subscriber => { this.pushNextStates(board, subscriber) })
-    }
+        return new Observable<Board>(subscriber => {
+            let canceled = false;
 
-    private async pushNextStates(board: Board, subscriber: Subscriber<Board>): Promise<void> {
-        let currentBoard = board
+            const engine = async () => {
+                let currentBoard = board
 
-        while (!currentBoard.winner() && !currentBoard.isDraw()) {
-            currentBoard = await this.nextState(currentBoard) 
-            subscriber.next(currentBoard)
-        }
+                while (!canceled && !currentBoard.winner() && !currentBoard.isDraw()) {
+                    currentBoard = await this.nextState(currentBoard) 
+                    subscriber.next(currentBoard)
+                }
+        
+                subscriber.complete()
+            }
 
-        subscriber.complete()
+            engine()
+            return () => canceled = true
+        })
     }
 
     private nextState(board: Board): Promise<Board> {
