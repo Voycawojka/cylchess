@@ -30,7 +30,7 @@ export class RoomResolver {
         @Args("variantIndex", { type: () => Int }) variantIndex: number
     ): RoomWithPlayerToken {
         const newRoom = this.roomService.createRoom(playerName, variantIndex)
-        pubSub.publish(events.roomCreated, { roomCreated: newRoom })
+        pubSub.publish(events.roomCreated, { roomCreated: newRoom.model })
 
         const roomData = new RoomWithPlayerToken()
 
