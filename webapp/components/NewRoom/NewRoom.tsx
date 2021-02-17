@@ -3,6 +3,17 @@ import styles from '../../styles/Home.module.css'
 import { variants } from "cylchess-logic"
 import { gql, useMutation } from "@apollo/client"
 import { useEffect } from "react"
+import { useRoomCtx } from "../RoomProvider/RoomProvider"
+import { useRouter } from "next/router"
+
+interface NewRoomData {
+    createRoom: {
+        playerToken: string,
+        room: {
+            id: number
+        }
+    }
+}
 
 const CREATE_ROOM_MUTATION = gql`
     mutation CreateRoom($variantIndex: Int!, $playerName: String!) {
@@ -18,13 +29,21 @@ const CREATE_ROOM_MUTATION = gql`
 export default function NewRoom() {
     const [variantIndex, , bindVariantIndex] = useIntInput(0)
     const [playerName, , bindPlayerName] = useTextInput('')
-
-    const [createRoom, { data, loading, error, called }] = useMutation(CREATE_ROOM_MUTATION)
+    const [createRoom, { data, loading, error, called }] = useMutation<NewRoomData>(CREATE_ROOM_MUTATION)
+    const [, roomDispatch] = useRoomCtx()
+    const router = useRouter()
 
     useEffect(() => {
         if (data && called && !loading && !error) {
-            console.log("!")
-            console.log(data)
+            roomDispatch({
+                type: 'SET_ROOM',
+                payload: {
+                    id: data.createRoom.room.id,
+                    playerNames: [playerName],
+                    variantIndex: variantIndex
+                }
+            })
+            router.push(`/play`)
         }
     }, [data, loading, error, called])
 

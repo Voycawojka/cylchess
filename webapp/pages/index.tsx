@@ -35,7 +35,7 @@ export default function Home() {
         <div>
           This project is open source. You can&nbsp;
           <a href="https://github.com/Voycawojka/cylchess">implement a new variant</a>
-          &nbsp;if you can code ;)
+          &nbsp;if you want to ;)
         </div>
       </footer>
     </div>

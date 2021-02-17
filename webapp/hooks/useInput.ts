@@ -1,11 +1,16 @@
-import { useState, ChangeEvent } from 'react'
+import { useState, ChangeEvent, SetStateAction, Dispatch } from 'react'
 
-const useInput = <T>(initialValue: T, transformInput: (value: string) => T) => {
+interface Bind<T> {
+    value: T,
+    onChange: (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void
+}
+
+const useInput = <T>(initialValue: T, transformInput: (value: string) => T): [T, Dispatch<SetStateAction<T>>, Bind<T>] => {
     const [value, setValue] = useState(initialValue)
 
-    const bind = {
+    const bind: Bind<T> = {
         value,
-        onChange: (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+        onChange: (event) => {
             event.preventDefault()
             setValue(transformInput(event.target.value))
         }
